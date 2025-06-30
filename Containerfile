@@ -1,3 +1,7 @@
+ARG GITHUB_USERNAME
+ARG IMAGE_NAME
+ARG IMAGE_REGISTRY
+
 # Allow build scripts to be referenced without being copied into the final image
 FROM scratch AS ctx
 # Modified: It's idiotic to not include all the files in the build context
