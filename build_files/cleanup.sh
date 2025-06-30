@@ -9,6 +9,6 @@ dnf5 clean all
 rm -rf /var/lib/dnf
 
 # if something is in /var/etc it's going to cause a linter error but with no details
-if [[ -d /var/etc ]]; then
-    find /var/etc | sort -u
+if [[ -d /usr/etc ]]; then
+    find /usr/etc | sort -u
 fi
