@@ -2,6 +2,14 @@
 
 set -ouex pipefail
 
+# /opt is a symlink to /var/opt which cannot be part of the image.
+# We need the content RPMs install to actually go to /usr/share/factory.
+# Temporarily remove the symlink and point it to the correct location. We'll undo
+# this at the end.
+rm /opt
+mkdir -p /usr/share/factory
+ln -s /usr/share/factory /opt
+
 # recursively copy everything from system_config/ in the build context to the root of the repo.
 pushd /ctx/system_config
 rsync -rvK . /
@@ -46,5 +54,20 @@ install -d -m 0755 /nix
 
 #systemctl enable podman.socket
 
+### Example of preparation for installing a package that requires a symlinked directory
+
+## /opt is symlinked to /var/opt
+## for packages that require it to be writeable do the following:
+#rm /opt # this is a file not a directory currently
+#mkdir /opt # create the opt directory so files can be installed to it
+## install package (dnf5 -y install .....)
+#mv /opt /usr/share/factory # move files installed to /opt to /usr/share/factory so they will be in the final image
+#ln -s /var/opt /opt # restore symlink between /var/opt and /opt again
+
 # Adds the cosign.pub as the signing key for verifying bootc images pulled from this repo.
 /ctx/build_files/signing.sh
+
+
+# Undo the /opt symlink redirect we did temporarily at the start so it points to the
+# correct place instead.
+ln -sf /var/opt /opt
