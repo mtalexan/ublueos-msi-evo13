@@ -64,9 +64,6 @@ install -d -m 0755 /nix
 #mv /opt /usr/share/factory # move files installed to /opt to /usr/share/factory so they will be in the final image
 #ln -s /var/opt /opt # restore symlink between /var/opt and /opt again
 
-# Adds the cosign.pub as the signing key for verifying bootc images pulled from this repo.
-/ctx/build_files/signing.sh
-
 
 # Undo the /opt symlink redirect we did temporarily at the start so it points to the
 # correct place instead.
