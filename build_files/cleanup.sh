@@ -8,6 +8,9 @@ dnf5 clean all
 # this doesn't clean up for some reason
 rm -rf /var/lib/dnf
 
+rm -rf /tmp/*
+rm -rf /var/*
+
 # if something is in /var/etc it's going to cause a linter error but with no details
 if [[ -d /usr/etc ]]; then
     find /usr/etc | sort -u

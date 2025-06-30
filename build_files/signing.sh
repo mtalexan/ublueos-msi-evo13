@@ -57,5 +57,5 @@ docker:
     use-sigstore-attachments: true
 EOF
 
-mkdir -p /usr/etc/containers/
-cp /etc/containers/policy.json /usr/etc/containers/policy.json
+#mkdir -p /usr/etc/containers/
+#cp /etc/containers/policy.json /usr/etc/containers/policy.json
