@@ -22,15 +22,19 @@ dnf5 install -y \
     plasma-discover-offline-updates \
     plasma-discover-rpm-ostree \
     plasma-discover-snap
-    
-# Need java for the cloudflare-warp to work
-dnf5 install -y \
-    cloudflare-warp
+
+/ctx/build_files/cloudflare_warp.sh
 
 # tio for serial
 dnf5 install -y \
     tio
+
     
+    
+# Add the nix mountpoint
+install -d -m 0755 /nix
+
+
 # Use a COPR Example:
 #
 # dnf5 -y copr enable ublue-os/staging
@@ -41,10 +45,6 @@ dnf5 install -y \
 #### Example for enabling a System Unit File
 
 #systemctl enable podman.socket
-
-# Add the nix mountpoint
-install -d -m 0755 /nix
-
 
 # Adds the cosign.pub as the signing key for verifying bootc images pulled from this repo.
 /ctx/build_files/signing.sh
