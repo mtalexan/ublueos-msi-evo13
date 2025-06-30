@@ -3,3 +3,10 @@
 # There are a LOT of undocumented things that need to be cleaned up for bootc to work.
 
 dnf5 clean all
+# this doesn't clean up for some reason
+rm -rf /var/lib/dnf
+
+# if something is in /var/etc it's going to cause a linter error but with no details
+if [[ -d /var/etc ]]; then
+    find /var/etc | sort -u
+fi
