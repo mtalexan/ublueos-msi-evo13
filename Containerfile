@@ -29,6 +29,7 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     --mount=type=cache,dst=/var/cache \
     --mount=type=cache,dst=/var/log \
     --mount=type=tmpfs,dst=/tmp \
+    [[ -z "${GITHUB_USERNAME}" ]] || [[ -z "${IMAGE_NAME}" ]] || [[ -z "${IMAGE_REGISTRY}" ]] || { echo >&2 "ERROR: Missing ARGS"; exit 1; }; \
     /ctx/build_files/build.sh && \
     /ctx/build_files/signing.sh "${GITHUB_USERNAME}" "${IMAGE_REGISTRY}" "${IMAGE_NAME}" && \
     ostree container commit
