@@ -25,7 +25,6 @@ dnf5 install -y \
     
 # Need java for the cloudflare-warp to work
 dnf5 install -y \
-    java-11-openjdk \
     cloudflare-warp
 
 # tio for serial
