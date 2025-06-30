@@ -8,7 +8,7 @@
 
 set -exou pipefail
 
-(( $# != 3 )) || { echo >&2 "Missing arguments: ${0##*/} GITHUB_USERNAME IMAGE_REGISTRY IMAGE_NAME"; exit 1; }
+(( $# == 3 )) || { echo >&2 "Missing arguments: ${0##*/} GITHUB_USERNAME IMAGE_REGISTRY IMAGE_NAME"; exit 1; }
 
 # lowercase the arguments
 readonly github_username="${1,,}"

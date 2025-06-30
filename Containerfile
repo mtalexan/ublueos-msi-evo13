@@ -1,7 +1,3 @@
-ARG GITHUB_USERNAME
-ARG IMAGE_NAME
-ARG IMAGE_REGISTRY
-
 # Allow build scripts to be referenced without being copied into the final image
 FROM scratch AS ctx
 # Modified: It's idiotic to not include all the files in the build context
@@ -25,13 +21,16 @@ FROM ghcr.io/ublue-os/aurora-dx:stable-daily
 ARG GITHUB_USERNAME
 ARG IMAGE_NAME
 ARG IMAGE_REGISTRY
+
 RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     --mount=type=cache,dst=/var/cache \
     --mount=type=cache,dst=/var/log \
     --mount=type=tmpfs,dst=/tmp \
-    [[ -z "${GITHUB_USERNAME}" ]] || [[ -z "${IMAGE_NAME}" ]] || [[ -z "${IMAGE_REGISTRY}" ]] || { echo >&2 "ERROR: Missing ARGS"; exit 1; }; \
+    [[ -n "${GITHUB_USERNAME}" ]] || { echo >&2 "ERROR: Missing ARG GITHUB_USERNAME"; exit 1; }; \
+    [[ -n "${IMAGE_NAME}" ]] || { echo >&2 "ERROR: Missing ARG IMAGE_NAME"; exit 1; }; \
+    [[ -n "${IMAGE_REGISTRY}" ]] || { echo >&2 "ERROR: Missing ARG IMAGE_REGISTRY"; exit 1; }; \
     /ctx/build_files/build.sh && \
-    /ctx/build_files/signing.sh "${GITHUB_USERNAME}" "${IMAGE_REGISTRY}" "${IMAGE_NAME}" && \
+    /ctx/build_files/signing.sh ${GITHUB_USERNAME} ${IMAGE_REGISTRY} ${IMAGE_NAME} && \
     ostree container commit
     
 ### LINTING
