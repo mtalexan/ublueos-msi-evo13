@@ -16,6 +16,10 @@ readonly image_registry="${2,,}"
 readonly image_name="${3,,}"
 export github_username image_registry image_name
 
+[[ -n $github_username ]] || { echo >&2 "ERROR: Blank arg 1"; exit 1; }
+[[ -n $image_registry ]] || { echo >&2 "ERROR: Blank arg 2"; exit 1; }
+[[ -n $image_name ]] || { echo >&2 "ERROR: Blank arg 3"; exit 1; }
+
 # Basename w/o suffix of YAML container registry config file, and the copied cosign.pub file
 readonly signing_key_file_basename="${github_username}-${image_name}"
 export signing_key_file_basename

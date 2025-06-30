@@ -8,6 +8,30 @@ As of Fedora 42, it's no longer possible to perform hot-fix changes to the rootf
 
 # How to Use
 
+1. Install a UBlue image and make sure it boots properly.
+2. Add the container policy files and signing key
+```shell
+# Download the signing key
+curl -sSL https:// | sudo tee "/etc/pki/containers/mtalexan-ublueos-msi-evo13.pub"
+
+# add to the container policy
+cat <<<"$(jq '.transports.docker |=. + {
+   "${image_registry}": [
+    {
+        "type": "sigstoreSigned",
+        "keyPath": "/etc/pki/containers/${signing_key_filename}.pub",
+        "signedIdentity": {
+            "type": "matchRepository"
+        }
+    }
+]}' <"/etc/containers/policy.json")" >"/tmp/policy.json"
+cp /tmp/policy.json /etc/containers/policy.json
+```
+3. Switch to these images (secure)
+```shell
+sudo bootc switch --enforce-container-sigpolicy ghcr.io/mtalexan/ublueos-msi-evo13:TAG
+```
+
 ## build.sh
 
 Called by the `Containerfile` to do the actual work. 
