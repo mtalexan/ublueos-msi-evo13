@@ -8,34 +8,48 @@
 
 set -exou pipefail
 
-# these need to match your GitHub username and the name of this repo
-readonly github_username="mtalexan"
-readonly github_reponame="ublueos-msi-evo13"
+(( $# != 3 )) || { echo >&2 "Missing arguments: ${0##*/} GITHUB_USERNAME IMAGE_REGISTRY IMAGE_NAME"; exit 1; }
+
+# lowercase the arguments
+readonly github_username="${1,,}"
+readonly image_registry="${2,,}"
+readonly image_name="${3,,}"
+export github_username image_registry image_name
+
+# Basename w/o suffix of YAML container registry config file, and the copied cosign.pub file
+readonly signing_key_file_basename="${github_username}-${image_name}"
+export signing_key_file_basename
 
 # Signing
 mkdir -p /etc/containers
 mkdir -p /etc/pki/containers
 mkdir -p /etc/containers/registries.d/
 
+# add the cosign.pub as the properly named signing key
+cp /ctx/cosign.pub "/etc/pki/containers/${signing_key_filename}.pub"
+
 if [ -f /usr/etc/containers/policy.json ]; then
     cp /usr/etc/containers/policy.json /etc/containers/policy.json
 fi
 
+# Add to the policy.json file (updating if it exists, otherwise creating).
+# Add the block that sets our signing key for images from our registry
 cat <<<"$(jq '.transports.docker |=. + {
-   "ghcr.io/${github_username}/${github_reponame}": [
+   "${image_registry}": [
     {
         "type": "sigstoreSigned",
-        "keyPath": "/etc/pki/containers/${github_username}-${github_reponame}.pub",
+        "keyPath": "/etc/pki/containers/${signing_key_filename}.pub",
         "signedIdentity": {
             "type": "matchRepository"
         }
     }
 ]}' <"/etc/containers/policy.json")" >"/tmp/policy.json"
 cp /tmp/policy.json /etc/containers/policy.json
-cp /ctx/cosign.pub /etc/pki/containers/${github_username}-${github_reponame}.pub
-tee /etc/containers/registries.d/${github_username}-${github_reponame}.yaml <<EOF
+
+# Add a YAML file to configure using sigstore (cosign) attachments for the signing key
+tee /etc/containers/registries.d/${signing_key_file_basename}.yaml <<EOF
 docker:
-  ghcr.io/${github_username}/${github_reponame}:
+  ${image_registry}:
     use-sigstore-attachments: true
 EOF
 
