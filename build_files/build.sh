@@ -3,11 +3,11 @@
 set -ouex pipefail
 
 # recursively copy everything from system_config/ in the build context to the root of the repo.
-rsync -rvK /ctx/system_config /
+pushd /ctx/system_config
+rsync -rvK . /
+popd
 
 ### Install packages
-
-dnf5 repolist
 
 # Packages can be installed from any enabled yum repo on the image.
 # RPMfusion repos are available by default in ublue main images
