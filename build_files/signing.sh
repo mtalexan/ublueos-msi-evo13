@@ -30,7 +30,7 @@ mkdir -p /etc/pki/containers
 mkdir -p /etc/containers/registries.d/
 
 # add the cosign.pub as the properly named signing key
-cp /ctx/cosign.pub "/etc/pki/containers/${signing_key_filename}.pub"
+cp /ctx/cosign.pub "/etc/pki/containers/${signing_key_file_basename}.pub"
 
 if [ -f /usr/etc/containers/policy.json ]; then
     cp /usr/etc/containers/policy.json /etc/containers/policy.json
@@ -42,7 +42,7 @@ cat <<<"$(jq '.transports.docker |=. + {
    "${image_registry}": [
     {
         "type": "sigstoreSigned",
-        "keyPath": "/etc/pki/containers/${signing_key_filename}.pub",
+        "keyPath": "/etc/pki/containers/${signing_key_file_basename}.pub",
         "signedIdentity": {
             "type": "matchRepository"
         }
