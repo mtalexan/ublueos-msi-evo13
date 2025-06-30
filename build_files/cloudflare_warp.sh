@@ -11,7 +11,8 @@ dnf5 install -y \
     cloudflare-warp
 
 # it installs into a weird place, not the correct one
-cp /opt/cloudflare-warp/warp-svc.service /etc/systemd/system/
+mkdir -p /usr/lib/systemd/system/
+cp /opt/cloudflare-warp/warp-svc.service /usr/lib/systemd/system/
 
 # enable it in the system
 systemctl enable warp-svc.service

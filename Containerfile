@@ -26,11 +26,9 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     --mount=type=cache,dst=/var/cache \
     --mount=type=cache,dst=/var/log \
     --mount=type=tmpfs,dst=/tmp \
-    [[ -n "${GITHUB_USERNAME}" ]] || { echo >&2 "ERROR: Missing ARG GITHUB_USERNAME"; exit 1; }; \
-    [[ -n "${IMAGE_REGISTRY}" ]] || { echo >&2 "ERROR: Missing ARG IMAGE_REGISTRY"; exit 1; }; \
-    [[ -n "${IMAGE_NAME}" ]] || { echo >&2 "ERROR: Missing ARG IMAGE_NAME"; exit 1; }; \
     /ctx/build_files/signing.sh "${GITHUB_USERNAME}" "${IMAGE_REGISTRY}" "${IMAGE_NAME}" && \
     /ctx/build_files/build.sh && \
+    /ctx/build_files/cleanup.sh && \
     ostree container commit
     
 ### LINTING
