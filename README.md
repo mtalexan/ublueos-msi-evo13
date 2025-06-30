@@ -12,20 +12,28 @@ As of Fedora 42, it's no longer possible to perform hot-fix changes to the rootf
 2. Add the container policy files and signing key
 ```shell
 # Download the signing key
-curl -sSL https:// | sudo tee "/etc/pki/containers/mtalexan-ublueos-msi-evo13.pub"
+curl -sSL https://raw.githubusercontent.com/mtalexan/ublueos-msi-evo13/refs/heads/main/cosign.pub | sudo tee "/etc/pki/containers/mtalexan-ublueos-msi-evo13.pub"
 
-# add to the container policy
+# add to the container policy to use the signing key
 cat <<<"$(jq '.transports.docker |=. + {
-   "${image_registry}": [
+   "ghcr.io/mtalexan": [
     {
         "type": "sigstoreSigned",
-        "keyPath": "/etc/pki/containers/${signing_key_filename}.pub",
+        "keyPath": "/etc/pki/containers/mtalexan-ublueos-msi-evo13.pub",
         "signedIdentity": {
             "type": "matchRepository"
         }
     }
 ]}' <"/etc/containers/policy.json")" >"/tmp/policy.json"
 cp /tmp/policy.json /etc/containers/policy.json
+
+# Add the YAML file for pulling the images
+tee /etc/containers/registries.d/mtalexan-ublueos-msi-evo13.yaml <<EOF
+docker:
+  ghcr.io/mtalexan:
+    use-sigstore-attachments: true
+EOF
+
 ```
 3. Switch to these images (secure)
 ```shell
