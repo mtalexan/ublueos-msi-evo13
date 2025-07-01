@@ -25,10 +25,10 @@ cat <<<"$(jq '.transports.docker |=. + {
         }
     }
 ]}' <"/etc/containers/policy.json")" >"/tmp/policy.json"
-cp /tmp/policy.json /etc/containers/policy.json
+sudo cp /tmp/policy.json /etc/containers/policy.json
 
 # Add the YAML file for pulling the images
-tee /etc/containers/registries.d/mtalexan-ublueos-msi-evo13.yaml <<EOF
+sudo tee /etc/containers/registries.d/mtalexan-ublueos-msi-evo13.yaml <<EOF
 docker:
   ghcr.io/mtalexan:
     use-sigstore-attachments: true
