@@ -31,7 +31,8 @@ dnf5 install -y \
     plasma-discover-rpm-ostree \
     plasma-discover-snap
 
-/ctx/build_files/cloudflare_warp.sh
+# Don't install the cloudflare warp package anymore
+#/ctx/build_files/cloudflare_warp.sh
 
 # tio for serial
 dnf5 install -y \
