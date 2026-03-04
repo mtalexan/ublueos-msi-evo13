@@ -4,7 +4,10 @@ FROM scratch AS ctx
 COPY / /
 
 # Base Image
-FROM ghcr.io/ublue-os/aurora-dx:stable-daily
+FROM ghcr.io/ublue-os/aurora-dx:stable
+# :stable is updated weekly, :stable-daily is daily, :latest is bleeding edge unstable.
+#FROM ghcr.io/ublue-os/aurora-dx:stable
+
 
 ## Other possible base images include:
 # FROM ghcr.io/ublue-os/bazzite:latest
