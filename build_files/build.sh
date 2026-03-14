@@ -32,7 +32,7 @@ dnf5 install -y \
     plasma-discover-snap
 
 # Mobile device interaction tools
-dnf5 install y \
+dnf5 install -y \
     # android-tools is already installed \
     #android-tools \
     idevicerestore
