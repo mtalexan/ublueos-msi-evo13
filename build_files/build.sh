@@ -31,6 +31,11 @@ dnf5 install -y \
     plasma-discover-rpm-ostree \
     plasma-discover-snap
 
+# Mobile device interaction tools
+dnf5 install y \
+    android-tools \
+    idevicerestore
+
 # Don't install the cloudflare warp package anymore
 #/ctx/build_files/cloudflare_warp.sh
 
