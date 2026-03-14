@@ -33,9 +33,9 @@ dnf5 install -y \
 
 # Mobile device interaction tools
 dnf5 install -y \
+    idevicerestore \
     # android-tools is already installed \
-    #android-tools \
-    idevicerestore
+    #android-tools
 
 # Don't install the cloudflare warp package anymore
 #/ctx/build_files/cloudflare_warp.sh
