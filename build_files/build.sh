@@ -57,6 +57,11 @@ install -d -m 0755 /nix
 # Disable COPRs so they don't end up enabled on the final image:
 # dnf5 -y copr disable ublue-os/staging
 
+# Install nsncd. The nscd tool is deprecated, but an equivalent is needed for being able to use nsswitch.conf
+# modules (like sssd or whatever) from within other shell types (like nix devShells).
+dnf -y copr enable kanata/nsncd 
+dnf5 -y install nsncd
+
 #### Example for enabling a System Unit File
 
 #systemctl enable podman.socket
