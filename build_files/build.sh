@@ -21,12 +21,12 @@ popd
 ### Install packages
 
 # UBlueOS images abruptly removed rpmFusion repos. Add them back in manually. 
-RUN dnf install -y \
-      https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm \
-      https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm \
-    && dnf install -y \
-        rpmfusion-free-release-tainted \
-        rpmfusion-nonfree-release-tainted
+dnf install -y \
+    https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm \
+    https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+dnf install -y \
+    rpmfusion-free-release-tainted \
+    rpmfusion-nonfree-release-tainted
 
 # Install KDE extras
 dnf5 install -y \
