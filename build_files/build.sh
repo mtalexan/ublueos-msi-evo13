@@ -20,10 +20,13 @@ popd
 
 ### Install packages
 
-# Packages can be installed from any enabled yum repo on the image.
-# RPMfusion repos are available by default in ublue main images
-# List of rpmfusion packages can be found here:
-# https://mirrors.rpmfusion.org/mirrorlist?path=free/fedora/updates/44/x86_64/repoview/index.html&protocol=https&redirect=1
+# UBlueOS images abruptly removed rpmFusion repos. Add them back in manually. 
+RUN dnf install -y \
+      https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm \
+      https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm \
+    && dnf install -y \
+        rpmfusion-free-release-tainted \
+        rpmfusion-nonfree-release-tainted
 
 # Install KDE extras
 dnf5 install -y \
