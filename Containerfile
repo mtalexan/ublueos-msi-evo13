@@ -1,6 +1,5 @@
 # Allow build scripts to be referenced without being copied into the final image
 FROM scratch AS ctx
-# Modified: It's idiotic to not include all the files in the build context
 COPY / /
 
 # Base Image
@@ -33,9 +32,6 @@ FROM ghcr.io/ublue-os/aurora-dx:stable
 ### MODIFICATIONS
 ## make modifications desired in your image and install packages by modifying the build.sh script
 ## the following RUN directive does all the things required to run "build.sh" as recommended.
-ARG GITHUB_USERNAME
-ARG IMAGE_REGISTRY
-ARG IMAGE_NAME
 
 RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     --mount=type=cache,dst=/var/cache \
