@@ -7,6 +7,11 @@ FROM ghcr.io/ublue-os/aurora-dx:stable
 # :stable is updated weekly, :stable-daily is daily, :latest is bleeding edge unstable.
 #FROM ghcr.io/ublue-os/aurora-dx:stable
 
+# Must modify the Justfile to actually pass these.
+# These must be present to be able to add the cosign.pub key as a signing key so subsequent updates can be signature-checked.
+ARG GITHUB_USERNAME
+ARG IMAGE_REGISTRY
+ARG IMAGE_NAME
 
 ## Other possible base images include:
 # FROM ghcr.io/ublue-os/bazzite:testing
