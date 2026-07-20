@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -ouex pipefail
+set -uexo pipefail
 
 # Requires the /opt symlink workaround so the RPM installs everything destined for /opt in
 # /usr/share/factory/ instead, but has the /opt symlink restored to point at /var/opt
