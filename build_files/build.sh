@@ -2,6 +2,9 @@
 
 set -ouex pipefail
 
+# Copy the contents of system_files/ of the git repo to /
+cp -avf "/ctx/system_files"/. /
+
 # /opt is a symlink to /var/opt which cannot be part of the image.
 # We need the content RPMs install to actually go to /usr/share/factory.
 # Temporarily remove the symlink and point it to the correct location. We'll undo
@@ -26,10 +29,7 @@ popd
 dnf5 install -y \
     imsettings-plasma \
     kclock-plasma-applet \
-    marble-plasma \
-    plasma-discover-offline-updates \
-    plasma-discover-rpm-ostree \
-    plasma-discover-snap
+    marble-plasma
 
 # Mobile device interaction tools
 dnf5 install -y \
