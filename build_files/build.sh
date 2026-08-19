@@ -60,8 +60,9 @@ install -d -m 0755 /nix
 
 # Install nsncd. The nscd tool is deprecated, but an equivalent is needed for being able to use nsswitch.conf
 # modules (like sssd or whatever) from within other shell types (like nix devShells).
-dnf -y copr enable kanata/nsncd 
+dnf5 -y copr enable kanata/nsncd 
 dnf5 -y install nsncd
+systemctl enable nsncd.service
 
 #### Example for enabling a System Unit File
 
