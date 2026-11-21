@@ -6,7 +6,7 @@ This repository is meant to be a template for building your own custom [bootc](h
 
 If you have questions about this template after following the instructions, try the following spaces:
 - [Universal Blue Forums](https://universal-blue.discourse.group/)
-- [Universal Blue Discord](https://discord.gg/WEu6BdFEtp)
+- [Universal Blue Discord](https://discord.gg/8RZGC3uFzA)
 - [bootc discussion forums](https://github.com/bootc-dev/bootc/discussions) - This is not an Universal Blue managed space, but is an excellent resource if you run into issues with building bootc images.
 
 # How to Use
@@ -99,6 +99,44 @@ If you don't know which image to pick, choosing the one your system is currently
 sudo bootc status
 ```
 This will show you all the info you need to know about your current image. The image you are currently on is displayed after `Booted image:`. Paste that information after the `FROM` statement in the Containerfile to set it as your base image.
+
+### Adding NVIDIA drivers
+
+The standalone `base-nvidia`, `silverblue-nvidia`, and `kinoite-nvidia` images have been retired following [ublue-os/main#927](https://github.com/ublue-os/main/issues/927). To add NVIDIA drivers to your own image, use the installer included in [akmods](https://github.com/ublue-os/akmods).
+
+For Silverblue on Fedora 44, keep the `ctx` stage in your `Containerfile` and replace the default Bazzite `FROM` line with:
+
+```dockerfile
+FROM ghcr.io/ublue-os/akmods-nvidia-open:main-44 AS nvidia-akmods
+FROM ghcr.io/ublue-os/silverblue-main:44
+```
+
+Add the NVIDIA RPM mount to the existing `RUN` instruction:
+
+```dockerfile
+RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
+    --mount=type=cache,dst=/var/cache \
+    --mount=type=cache,dst=/var/log \
+    --mount=type=tmpfs,dst=/tmp \
+    --mount=type=bind,from=nvidia-akmods,source=/rpms,target=/tmp/akmods-rpms \
+    /ctx/build.sh
+```
+
+Then add this to the end of `build_files/build.sh` to install the drivers and rebuild the initramfs:
+
+```bash
+IMAGE_NAME=silverblue /tmp/akmods-rpms/ublue-os/nvidia-install.sh
+
+KERNEL_VERSION="$(rpm -q --queryformat='%{VERSION}-%{RELEASE}.%{ARCH}' kernel-core)"
+export DRACUT_NO_XATTR=1
+dracut --no-hostonly --kver "$KERNEL_VERSION" --reproducible --add ostree \
+    -f "/usr/lib/modules/$KERNEL_VERSION/initramfs.img"
+chmod 0600 "/usr/lib/modules/$KERNEL_VERSION/initramfs.img"
+```
+
+The base and akmods images must use the same Fedora release and exact kernel version. This example is for Universal Blue `*-main` images, not bases that already include NVIDIA drivers or use a custom kernel.
+
+Check [akmods hardware support](https://github.com/ublue-os/akmods#nvidia-hardware-support) before choosing a driver variant. With Secure Boot enabled, run `ujust enroll-secure-boot-key` on the installed system and complete enrollment at reboot.
 
 ### Step 2c: Changing Names
 
